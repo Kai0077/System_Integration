@@ -1,0 +1,9 @@
+<me>
+    <name>Kai</name>
+    <age>25</age>
+    <skills>
+        <skill>Java</skill>
+        <skill>Python</skill>
+        <skill>JavaScript</skill>
+    </skills>
+</me>
