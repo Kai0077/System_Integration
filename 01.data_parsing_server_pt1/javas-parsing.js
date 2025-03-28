@@ -1,21 +1,20 @@
-const fs = require('fs'); // File System module
-const csv = require('csv-parser'); // CSV parser
+import { readFileSync, createReadStream } from 'fs';
+import csv from 'csv-parser';
 
-// Paths to your files
 const jsonFile = '/Users/kaitsvetkov/System_Integration/System_Integration/02.Text-based_Data_Formats/me.json';
 const csvFile = '/Users/kaitsvetkov/System_Integration/System_Integration/02.Text-based_Data_Formats/me.csv';
 const txtFile = '/Users/kaitsvetkov/System_Integration/System_Integration/02.Text-based_Data_Formats/me.txt';
 
 // Function to read JSON
 const readJSON = (filepath) => {
-    return JSON.parse(fs.readFileSync(filepath, 'utf8'));
+    return JSON.parse(readFileSync(filepath, 'utf8'));
 };
 
-// Function to read CSV (async because CSV parsing is event-based)
+// Function to read CSV
 const readCSV = async (filepath) => {
     return new Promise((resolve, reject) => {
         const results = [];
-        fs.createReadStream(filepath)
+        createReadStream(filepath)
             .pipe(csv())
             .on('data', (data) => results.push(data))
             .on('end', () => resolve(results))
@@ -25,7 +24,7 @@ const readCSV = async (filepath) => {
 
 // Function to read TXT
 const readTXT = (filepath) => {
-    return fs.readFileSync(filepath, 'utf8').replace(/\n/g, ' '); // Convert newlines to spaces
+    return readFileSync(filepath, 'utf8').replace(/\n/g, ' ');
 };
 
 // Read all files and print each content on a new line
