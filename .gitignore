@@ -6,6 +6,8 @@ vite
 
 .vite 
 
+*venv
+
 ### Node ###
 # Logs
 logs
