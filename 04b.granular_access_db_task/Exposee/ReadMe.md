@@ -30,7 +30,7 @@ Databasen **granular_access_db** er eksponeret via Pinggy og anvender **Row-Leve
 ![confidential_reports begrænsninger](confidential_reports_begrænsninger.png)
 
 ### employees begrænsninger
-![employee begrænsninger](employee_begrænsninger.png)
+![employee begrænsninger](employee_begrænsning.png)
 
 # Data og Struktur
 
