@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple GraphQL Example</title>
+</head>
+<body>
+
+    <h1>GraphQl</h1>
+
+    <p>Key</p>
+    <div id="key"></div>
+
+    <p>Values</p>
+    <div id="values"></div>
+
+    <script>
+      const query = `query {
+        Hello
+      }`;
+    
+      fetch("/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query })
+      })
+      .then((response) => response.json())
+      .then((result) => {
+        document.getElementById("key").textContent = Object.keys(result.data)[0];
+        document.getElementById("value").textContent = result.data.Hello; 
+      })
+      .catch((error) => {
+        console.error("GraphQL request failed", error);
+      });
+    </script>
+
+
+  
+</body>
+</html>

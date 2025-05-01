@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "name": "22._mpeg-dash",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
