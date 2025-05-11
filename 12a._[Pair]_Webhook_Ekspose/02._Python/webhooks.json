@@ -1,0 +1,18 @@
+[
+  {
+    "url": "http://localhost:3000/webhook",
+    "event": "payment_received"
+  },
+  {
+    "url": "http://localhost:3000/webhook",
+    "event": "payment_received"
+  },
+  {
+    "url": "http://localhost:3000/webhook",
+    "event": "payment_received"
+  },
+  {
+    "url": "http://localhost:3000/webhook",
+    "event": "payment_received"
+  }
+]
