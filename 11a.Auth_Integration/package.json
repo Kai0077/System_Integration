@@ -1,0 +1,19 @@
+{
+  "name": "11a.auth_integration",
+  "version": "1.0.0",
+  "description": "Guide to set up Google Authentication with Firebase in your web application.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "firebase": "^11.6.0"
+  }
+}
