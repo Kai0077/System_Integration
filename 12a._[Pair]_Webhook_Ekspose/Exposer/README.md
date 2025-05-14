@@ -34,78 +34,79 @@ POST /webhooks/register
 Register a URL to receive specific event types.
 
 Request:
-
+```
 {
   "url": "https://integrator-url.loca.lt/webhook-receiver",
   "event_types": ["payment_received", "invoice_completed"]
 }
-
+```
 Response:
-
+```
 {
   "message": "Webhook registered for: payment_received, invoice_completed"
 }
+```
+
+⸻
 
 DELETE /webhooks/unregister
 
 Unregister a webhook for a specific event.
 
 Request:
-
+```
 {
   "url": "https://integrator-url.loca.lt/webhook-receiver",
   "event": "payment_received"
 }
-
+```
 Response:
-
+```
 {
   "message": "1 webhook(s) unregistered"
 }
+```
+
+⸻
 
 GET /ping
 
 Trigger a test event to all registered webhooks.
 
 Sends:
-
+```
 {
   "event": "ping",
   "data": "Ping from Exposee"
 }
+```
+
+⸻
 
 POST /trigger
 
 Trigger a specific event and send data to all registered webhooks.
 
 Request:
-
+```
 {
   "event": "payment_received",
   "data": { "amount": 100, "currency": "USD" }
 }
+```
 
-POST /event
-
-Alternative trigger using event_type.
-
-Request:
-
-{
-  "event_type": "invoice_completed",
-  "data": { "invoice_id": "INV-001" }
-}
+⸻
 
 POST /webhooks/ping-back
 
 Allows integrator to confirm receipt of a ping and get the original ping payload back.
 
 Request:
-
+```
 {
   "url": "https://integrator-url.loca.lt/webhook-receiver"
 }
-
+```
 
 ⸻
 
@@ -122,8 +123,10 @@ Objective
 	•	Set up a local server to receive webhooks
 	•	Create a script to register this server with the exposee
 
-1. Webhook Receiver (app.js)
+⸻
 
+1. Webhook Receiver (app.js)
+```
 import express from 'express';
 const app = express();
 app.use(express.json());
@@ -133,20 +136,28 @@ app.post('/webhook-receiver', (req, res) => {
   res.sendStatus(204);
 });
 
-app.listen(8080);
-
+app.listen(8080, () => {
+  console.log('Listening on port 8080');
+});
+```
 Use a tunneling tool (like LocalTunnel or Pinggy) to expose your server.
-
+```
 lt --port 8080 --subdomain example-integrator
+```
+
+⸻
 
 2. Registration Script (registerWebhook.js)
-
+```
 import axios from 'axios';
 
 const EXPOSEE_URL = 'https://example-exposee.loca.lt';
 const WEBHOOK_URL = 'https://example-integrator.loca.lt/webhook-receiver';
 const EVENT_TYPES = ['payment_received'];
 
+
+```
+```
 async function registerWebhook() {
   try {
     const res = await axios.post(`${EXPOSEE_URL}/webhooks/register`, {
@@ -161,27 +172,6 @@ async function registerWebhook() {
 
 registerWebhook();
 
-
+```
 ⸻
 
-Hand-in Checklist
-
-Exposee
-	•	FastAPI code
-	•	webhook.json file
-	•	Documentation (this README)
-
-Integrator
-	•	app.js webhook receiver
-	•	registerWebhook.js script
-	•	Screenshots of receiving events
-
-⸻
-
-Optional Hosting
-
-If both parties want to deploy, use tools like:
-	•	LocalTunnel
-	•	Pinggy
-	•	Ngrok
-	•	Serverless (Vercel, Railway, etc.)
