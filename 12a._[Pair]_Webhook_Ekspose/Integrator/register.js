@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const WEBHOOK_BASE_URL = 'https://gentle-dancers-tie.loca.lt';
+const WEBHOOK_BASE_URL = 'https://nasty-ways-kneel.loca.lt'; 
 
-const RECEIVER_URL = 'https://blue-worms-heal.loca.lt/webhook-receiver';
+const RECEIVER_URL = 'https://lovely-experts-deny.loca.lt/webhook-receiver'; //min
 
 const EVENT = 'payment.received';
 
