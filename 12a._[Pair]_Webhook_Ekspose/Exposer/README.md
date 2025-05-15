@@ -1,177 +1,123 @@
-12a Webhook System: Exposee and Integrator Roles
+# Webhook System
 
-Overview
+This server exposes a webhook service, allowing external applications to be notified when certain events happen.
 
-This project simulates a GitHub-like webhook system where two roles interact:
-	•	Exposee: Hosts the system and exposes events to external consumers.
-	•	Integrator: Consumes events by registering a webhook to receive data.
+## Overview of Operation
 
-Each participant plays both roles and switches midway.
+1. External applications (receivers) run a web server ready to accept incoming webhook notifications.
+    
+2. These applications register their public URL and choose which event types they want to receive via the webhook system's API.
+    
+3. When the webhook system processes an event, it automatically sends an HTTP POST with the event data to all registered subscribers.
+    
+## Supported Events
 
-⸻
+Subscribers can choose the receiving notifications for the following events:
 
-Exposee Instructions
+- `payment_received`
+    
+- `payment_processed`
+    
+- `invoice_processing`
+    
+- `invoice_completed`
+    
 
-Objective
+## Requirements for Receivers
 
-Allow integrators to:
-	•	Register and unregister webhooks
-	•	Receive notifications for specific events
-	•	Test webhook connectivity via a ping mechanism
+To connect to this webhook system, a receiver must have:
 
-Event Types (Example Theme: Payment Processing)
-	•	payment_received
-	•	payment_processed
-	•	invoice_processing
-	•	invoice_completed
+- A web server actively running and able to handle HTTP POST requests.
+    
+- A way to interact with the API—this could be a script, CLI tool like `curl`, or API testing tool such as `Postman`.
+    
 
-⸻
+Receiver servers should:
 
-Endpoints
+- Listen for incoming `POST` requests on a designated route.
+    
+- Parse JSON request bodies properly.
+    
+- Return a `200 OK` response to confirm that the webhook was successfully received.
+    
 
-POST /webhooks/register
+### API Usage Guide
 
-Register a URL to receive specific event types.
+All requests should be directed to the base URL of the webhook system:
 
-Request:
-```
+**Webhook Base URL:** `https://wide-apples-say.loca.lt`
+
+#### 1. Register Your Webhook
+
+Subscribe a receiver URL to one or more event types.
+
+- **Endpoint:** `/register`
+    
+- **Method:** `POST`
+    
+
+**Request Example:**
+```json
 {
-  "url": "https://integrator-url.loca.lt/webhook-receiver",
-  "event_types": ["payment_received", "invoice_completed"]
+  "url": "WEBHOOK_RECEIVER_URL",
+  "event": ["event2", "event3"]
 }
 ```
-Response:
-```
-{
-  "message": "Webhook registered for: payment_received, invoice_completed"
+
+- **Request URL:** `https://wide-apples-say.loca.lt/webhooks/register`
+    
+
+**Successful Response (`200 OK`):**
+```json
+{ 
+  "message": "Webhook registered for: event" 
 }
 ```
 
-⸻
+#### 2. Remove a Webhook
 
-DELETE /webhooks/unregister
+Unsubscribe a webhook from selected events or remove it entirely.
 
-Unregister a webhook for a specific event.
+- **Endpoint:** `/unregister`
+    
+- **Method:** `DELETE`
+    
 
-Request:
-```
+**Request URL:** `https://nasty-ways-kneel.loca.lt/unregister`
+
+**Request Body:**
+```json
 {
-  "url": "https://integrator-url.loca.lt/webhook-receiver",
-  "event": "payment_received"
+  "url": "REGISTERED_WEBHOOK_RECEIVER_URL",
+  "event": ["event1"]
 }
 ```
-Response:
-```
+
+- If `event_types` is missing or an empty array, all events for that URL will be removed.
+    
+- If specified, only matching subscriptions for those event types will be removed.
+    
+
+**Success Response (`200 OK`):**
+```json
 {
   "message": "1 webhook(s) unregistered"
 }
 ```
+#### 3. Test Webhook with Ping
 
-⸻
+Send a test webhook to all registered subscribers to confirm connectivity.
 
-GET /ping
+- **Endpoint:** `/ping`
+    
+- **Method:** `GET`
+    
 
-Trigger a test event to all registered webhooks.
+**Request URL:** `https://nasty-ways-kneel.loca.lt/ping`
 
-Sends:
-```
-{
-  "event": "ping",
-  "data": "Ping from Exposee"
+**Success Response (`200 OK`):**
+```json
+{ 
+  "message": "Ping sent." 
 }
 ```
-
-⸻
-
-POST /trigger
-
-Trigger a specific event and send data to all registered webhooks.
-
-Request:
-```
-{
-  "event": "payment_received",
-  "data": { "amount": 100, "currency": "USD" }
-}
-```
-
-⸻
-
-POST /webhooks/ping-back
-
-Allows integrator to confirm receipt of a ping and get the original ping payload back.
-
-Request:
-```
-{
-  "url": "https://integrator-url.loca.lt/webhook-receiver"
-}
-```
-
-⸻
-
-Internals: Webhook Storage
-	•	Webhooks are stored in a local file: webhooks.json
-	•	Each entry includes a URL and an event name
-	•	Supports multiple events per URL
-
-⸻
-
-Integrator Instructions
-
-Objective
-	•	Set up a local server to receive webhooks
-	•	Create a script to register this server with the exposee
-
-⸻
-
-1. Webhook Receiver (app.js)
-```
-import express from 'express';
-const app = express();
-app.use(express.json());
-
-app.post('/webhook-receiver', (req, res) => {
-  console.log('Received webhook payload:', req.body);
-  res.sendStatus(204);
-});
-
-app.listen(8080, () => {
-  console.log('Listening on port 8080');
-});
-```
-Use a tunneling tool (like LocalTunnel or Pinggy) to expose your server.
-```
-lt --port 8080 --subdomain example-integrator
-```
-
-⸻
-
-2. Registration Script (registerWebhook.js)
-```
-import axios from 'axios';
-
-const EXPOSEE_URL = 'https://example-exposee.loca.lt';
-const WEBHOOK_URL = 'https://example-integrator.loca.lt/webhook-receiver';
-const EVENT_TYPES = ['payment_received'];
-
-
-```
-```
-async function registerWebhook() {
-  try {
-    const res = await axios.post(`${EXPOSEE_URL}/webhooks/register`, {
-      url: WEBHOOK_URL,
-      event_types: EVENT_TYPES
-    });
-    console.log('Register Response:', res.status, res.data);
-  } catch (err) {
-    console.error('Registration failed:', err.response?.data || err.message);
-  }
-}
-
-registerWebhook();
-
-```
-⸻
-
