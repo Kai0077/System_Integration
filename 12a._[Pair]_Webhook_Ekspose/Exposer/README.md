@@ -7,9 +7,7 @@ This server exposes a webhook service, allowing external applications to be noti
 1. External applications (receivers) run a web server ready to accept incoming webhook notifications.
     
 2. These applications register their public URL and choose which event types they want to receive via the webhook system's API.
-    
-3. When the webhook system processes an event, it automatically sends an HTTP POST with the event data to all registered subscribers.
-    
+        
 ## Supported Events
 
 Subscribers can choose the receiving notifications for the following events:
