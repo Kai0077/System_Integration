@@ -5,7 +5,7 @@
 ## Ping the webhook from postman:
 ![alt text](images/pingPostman.png)
 
-## Get a response from the webhook from your ping:
+## Get a event from the webhook after ping:
 ![alt text](images/pingResponseFromWebhook.png)
 
 ## Unregister payment from postman:
