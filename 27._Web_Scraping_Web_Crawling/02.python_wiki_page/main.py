@@ -1,17 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 
-html = requests.get("wiki side").text
-parsed_html = BeautifulSoup(html, "lxml")
+html = requests.get("https://en.wikipedia.org/wiki/List_of_Monty_Python_projects").text
+parse_html = BeautifulSoup(html, "lxml")
 
+tags = parse_html.find("div", {"class": "mw-parser-output"})
 
-tags = parsed_html.find("div", {"class": "mw-parsed-output"})
+projects = {"Initial_Category": []}
 
-projects = {
-    "Initial_Category":
-}
-
-current_category = None
+current_category = "Initial_Category"
 
 for tag in tags:
     if tag.name == "h2":
@@ -22,4 +19,6 @@ for tag in tags:
             projects[current_category].append(li.text)
 
 
-print(projects)
+from pprint import pprint
+
+pprint(projects)

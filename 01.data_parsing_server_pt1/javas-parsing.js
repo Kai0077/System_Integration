@@ -1,39 +1,11 @@
-import { readFileSync, createReadStream } from 'fs';
-import csv from 'csv-parser';
+import { readFileSync } from "fs";
+import { join } from "path";
 
-const jsonFile = '/Users/kaitsvetkov/System_Integration/System_Integration/02.Text-based_Data_Formats/me.json';
-const csvFile = '/Users/kaitsvetkov/System_Integration/System_Integration/02.Text-based_Data_Formats/me.csv';
-const txtFile = '/Users/kaitsvetkov/System_Integration/System_Integration/02.Text-based_Data_Formats/me.txt';
+const BASE_FOLDER = "../02.Text-based_Data_Formats";
+const fileTypes = [".json", ".csv", ".xml", ".yaml", ".txt"];
 
-// Function to read JSON
-const readJSON = (filepath) => {
-    return JSON.parse(readFileSync(filepath, 'utf8'));
-};
-
-// Function to read CSV
-const readCSV = async (filepath) => {
-    return new Promise((resolve, reject) => {
-        const results = [];
-        createReadStream(filepath)
-            .pipe(csv())
-            .on('data', (data) => results.push(data))
-            .on('end', () => resolve(results))
-            .on('error', reject);
-    });
-};
-
-// Function to read TXT
-const readTXT = (filepath) => {
-    return readFileSync(filepath, 'utf8').replace(/\n/g, ' ');
-};
-
-// Read all files and print each content on a new line
-(async () => {
-    const jsonContent = readJSON(jsonFile);
-    const csvContent = await readCSV(csvFile);
-    const txtContent = readTXT(txtFile);
-
-    console.log(`JSON: ${JSON.stringify(jsonContent)}`);
-    console.log(`CSV: ${JSON.stringify(csvContent)}`);
-    console.log(`TXT: "${txtContent}"`);
-})();
+fileTypes.forEach(ext => {
+    const filePath = join(BASE_FOLDER, `me${ext}`);
+    console.log(`\n--- me${ext} ---`);
+    console.log(readFileSync(filePath, "utf-8"));
+});
